@@ -1,0 +1,77 @@
+---
+- hosts: '{{ hostd }}'
+  remote_user: centos
+  become: true
+  tasks:
+  - name: copy cointreau prod key
+    copy:
+     src: /Users/ankit.tyagi/Documents/keys/cointreau-prod.pem
+     dest: /home/centos/cointreau-prod.pem
+     owner: root
+     group: root
+     mode: '0400'
+
+  - name: replace Hostname from /etc/sysconfig/network
+    replace: 
+     path: /etc/sysconfig/network
+     regexp: '^(.*)HOSTNAME=(.*)$'
+     replace: '{{ job_Server }}'
+     backup: no
+
+  - name: replace ServerAlias from /etc/httpd/conf.d/conduit-jobsub.conf
+    replace:
+     path: /etc/httpd/conf.d/conduit-jobsub.conf
+     regexp: '^(.*)ServerAlias(.*)$'
+     replace: 'ServerAlias {{ job_Server }}'
+     backup: no
+
+  - name: replace ServerName from /etc/httpd/conf.d/conduit-jobsub.conf
+    replace:
+     path: /etc/httpd/conf.d/conduit-jobsub.conf
+     regexp: '^(.*)ServerName(.*)$'
+     replace: 'ServerName {{ job_Server }}'
+     backup: no
+
+  - name: replace hostname from /etc/luigi/client.cfg
+    replace:
+     path: /etc/luigi/client.cfg
+     regexp: '^(.*)jobsub_api_server_url=(.*)$'
+     replace: 'jobsub_api_server_url=http://{{ job_Server }}'
+     backup: no
+
+  - name: replace hostname from /etc/conduit/core.cfg
+    replace:
+     path: /etc/conduit/core.cfg
+     regexp: '^(.*)jobsub_api_server_url=(.*)$'
+     replace: 'jobsub_api_server_url=http://{{ job_Server }}'
+     backup: no
+
+#  - name: start luigi 
+#    command: "/opt/rh/python27/root/usr/bin/python2 /opt/rh/python27/root/usr/bin/luigid --background"
+
+- hosts: torque
+  remote_user: centos
+  become: yes
+  become_user: cointreau
+  tasks:
+  - name: pub key entry in torque nodes 
+    shell: ssh-keyscan -H {{ job_Server }} >> /home/cointreau/.ssh/known_hosts
+
+- hosts: master
+  remote_user: centos
+  become: true
+  tasks:
+#  - name: check entry in /etc/hosts.equiv
+#    shell: cat /etc/hosts.equiv | grep {{ job_Server }} 
+#    register: test_grep
+  - name: delete jobsub host entry if present in /etc/hosts.equiv file
+    lineinfile:
+     dest: /etc/hosts.equiv
+     regexp: >
+       ^{{ job_Server }}$
+     state: absent
+  - name: enter new jobsub detail in /etc/hosts.equiv
+    lineinfile:
+     dest: /etc/hosts.equiv
+     line: '{{ job_Server }}'
+     state: present
