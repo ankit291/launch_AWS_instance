@@ -10,7 +10,7 @@ ec2 = boto3.resource('ec2',region_name='us-east-1')
 def create_ec2_instance():
 
     instance = ec2.create_instances(
-        ImageId='ami-09b932d39fb3f395b',
+        ImageId='ami-09b932ascd39fb3f395b',
         MinCount=1,
         MaxCount=1,
         Monitoring={
@@ -20,7 +20,7 @@ def create_ec2_instance():
         SecurityGroupIds=['sg-fece1185','sg-5d2beb26','sg-8cd379f7'],
         SubnetId='subnet-39384e61',
         IamInstanceProfile={
-            'Name': 'cointreau-jobsub-prod-use1-profile',
+            'Name': 'cointreau-role-prod-use1-profile',
             },
     )
     ID = instance[0].id
@@ -49,7 +49,7 @@ def create_ec2_instance():
 	    ins_Name = [i['Value'] for i in ins_tags if i['Key'] == 'Name'][0]
             print ins_Name
             response = boto3.client('route53').change_resource_record_sets(
-            	HostedZoneId='Z2M2UW7JU6RG2I',
+            	HostedZoneId='Z2M2UW7JAP6RG2I',
             	ChangeBatch={
 	                'Changes': [
         	            {
@@ -70,7 +70,7 @@ def create_ec2_instance():
     	     )
 
             responseR = boto3.client('route53').change_resource_record_sets(
-        	    HostedZoneId='Z18N13E7MFE9LD',
+        	    HostedZoneId='Z18N1AP3E7MFE9LD',
         	    ChangeBatch={
                 	'Changes': [
                 	    {
