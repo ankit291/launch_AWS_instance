@@ -1,9 +1,9 @@
 [jobsub]
-10.0.130.64 ansible_ssh_private_key_file=/Users/ankit.tyagi/Documents/keys/cointreau-prod.pem
+10.0.130.64 ansible_ssh_private_key_file=/Users/user.name/Documents/keys/user-prod.pem
 
 [torque]
-10.0.130.181 ansible_ssh_private_key_file=/Users/ankit.tyagi/Documents/keys/cointreau-prod.pem
-10.0.128.100 ansible_ssh_private_key_file=/Users/ankit.tyagi/Documents/keys/cointreau-prod.pem
+10.0.130.181 ansible_ssh_private_key_file=/Users/user.name/Documents/keys/user-prod.pem
+10.0.128.100 ansible_ssh_private_key_file=/Users/user.name/Documents/keys/user-prod.pem
 
 [master]
-10.0.131.253 ansible_ssh_private_key_file=/Users/ankit.tyagi/Documents/keys/cointreau-prod.pem
+10.0.131.253 ansible_ssh_private_key_file=/Users/user.name/Documents/keys/user-prod.pem
