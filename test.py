@@ -17,10 +17,10 @@ def create_ec2_instance():
             'Enabled': False},
         InstanceType='t2.micro',
         KeyName='cointreau-prod',
-        SecurityGroupIds=['sg-fece1185','sg-5d2beb26','sg-8cd379f7'],
+        SecurityGroupIds=['sg-12345','sg-56789','sg-sd346'],
         SubnetId='subnet-39384e61',
         IamInstanceProfile={
-            'Name': 'cointreau-role-prod-use1-profile',
+            'Name': 'user-role-prod-use1-profile',
             },
     )
     ID = instance[0].id
@@ -41,7 +41,7 @@ def create_ec2_instance():
 		    	Resources=[ID],	
 			Tags=[{'Key':'Env','Value': 'prod'},{'Key': 'Location', 'Value': 'use1'},{'Key':'Name','Value': Host_Name},
 			      {'Key':'Profile','Value': 'jobsub'},{'Key':'approval','Value': 'planned'},{'Key':'department','Value': 'mpe'},
-		              {'Key':'environment','Value': 'prod'},{'Key':'note','Value': 'comscore instances'},{'Key':'owner','Value': 'comscoresupport@3pillarglobal.com'},
+		              {'Key':'environment','Value': 'prod'},{'Key':'note','Value': 'comscore instances'},{'Key':'owner','Value': 'user.name@3@gmail.com'},
 	       	              {'Key':'project','Value': 'comscore Project'},]
 		            )
 	    
@@ -49,7 +49,7 @@ def create_ec2_instance():
 	    ins_Name = [i['Value'] for i in ins_tags if i['Key'] == 'Name'][0]
             print ins_Name
             response = boto3.client('route53').change_resource_record_sets(
-            	HostedZoneId='Z2M2UW7JAP6RG2I',
+            	HostedZoneId='Z2M2UFSONFP6RG2I',
             	ChangeBatch={
 	                'Changes': [
         	            {
@@ -89,7 +89,7 @@ def create_ec2_instance():
                	     ]
                 }
            )
-            cmd = 'export ANSIBLE_HOST_KEY_CHECKING=False; ansible-playbook -i /Users/ankit.tyagi/PYTHON_JOBSUB/inv changes.yml --extra-vars "job_Server='+ ins_Name +' hostd=' + priv_IP +'"'
+            cmd = 'export ANSIBLE_HOST_KEY_CHECKING=False; ansible-playbook -i /Users/user.name/PYTHON_JOBSUB/inv changes.yml --extra-vars "job_Server='+ ins_Name +' hostd=' + priv_IP +'"'
             os.system(cmd)
     get_status()
 if __name__ == '__main__':
